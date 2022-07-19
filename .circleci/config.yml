@@ -42,11 +42,31 @@ jobs:
 
       - store_test_results:
           path: test-results
+
+  test-reparse-testnet:
+    docker:
+        - image: cimg/python:3.6.15
+    
+    steps:
+      - attach_workspace:
+          at: ~/
+        
+      - run:
+          name: "Run testnet reparse test"
+          command: "mkdir test-results; py.test --junitxml=test-results/junit.xml --verbose --capture=no --skiptestbook=testnet -k test_book counterpartylib/test/reparse_test.py"
+      
+      - store_test_results:
+          path: test-results
+
+
 workflows:
   build-and-test:
     jobs:
       - build
       - test:
+          requires:
+            - build
+      - test-reparse-testnet:
           requires:
             - build
 
