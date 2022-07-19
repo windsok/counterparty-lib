@@ -11,14 +11,27 @@ jobs:
 
     steps:
       - checkout
+
+      - run:
+          command: |
+              virtualenv .venv;
+              echo "source .venv/bin/activate" >> $BASH_ENV;
+
       - python/install-packages:
           pkg-manager: pip
+
       - run:
           name: Run counterparty-lib setup and install
           command: python setup.py develop 
+
       - run: 
           name: Run apsw setup and install
           command: python setup.py install_apsw
+
+      - save_cache:
+          key: python-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}--{{ checksum "setup.py" }}
+          paths: 
+            - ~/.local
 
       - persist_to_workspace:
           root: ~/project
@@ -34,6 +47,16 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/project
+
+      - restore_cache:
+          name: Restore Python Cache
+          keys:
+            - python-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}--{{ checksum "setup.py" }}
+
+      - run:
+          command: |
+              virtualenv .venv;
+              echo "source .venv/bin/activate" >> $BASH_ENV;
       
       - run:
           name: "Run tests: config context"
