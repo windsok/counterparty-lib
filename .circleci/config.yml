@@ -19,14 +19,22 @@ jobs:
       - run: 
           name: Run apsw setup and install
           command: python setup.py install_apsw
-      
+
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - .      
+
   test:
     docker:
       - image: cimg/python:3.6.15
 
     parallelism: 5
-    
+
     steps:
+      - attach_workspace:
+          at: ~/project
+      
       - run:
           name: "Run tests: config context"
           command: py.test --verbose --capture=no counterpartylib/test/config_context_test.py
