@@ -54,9 +54,10 @@ jobs:
       - run:
           name: "Get latest testnet db file"
           command: |
-            mkdir -p ~/.local/share/counterparty;
+            mkdir -p ~/.local/share/counterparty
             wget https://counterparty.io/bootstrap/counterparty-db-testnet-7.latest.tar.gz -O ~/.local/share/counterparty/counterparty-db-testnet.latest.tar.gz
             tar -C ~/.local/share/counterparty -xvzf ~/.local/share/counterparty/counterparty-db-testnet.latest.tar.gz
+            mv ~/.local/share/counterparty/counterparty.testnet.db ~/.local/share/counterparty/counterparty.db 
 
       - run:
           name: "Run testnet reparse test"
