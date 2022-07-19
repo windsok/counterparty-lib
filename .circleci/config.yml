@@ -1,0 +1,69 @@
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+orbs:
+  python: circleci/python@1.5.0
+
+jobs:
+  build:
+    docker:
+      - image: cimg/python:3.6.15
+
+    steps:
+      - checkout
+      - python/install-packages:
+          pkg-manager: pip
+      - run:
+          name: Run counterparty-lib setup and install
+          command: python setup.py develop 
+      - run: 
+          name: Run apsw setup and install
+          command: python setup.py install_apsw
+      
+  test:
+    docker:
+      - image: cimg/python:3.6.15
+
+    parallelism: 5
+    
+    steps:
+      - run:
+          name: "Run tests: config context"
+          command: py.test --verbose --capture=no counterpartylib/test/config_context_test.py
+
+      - run:
+          name: "Run tests: unit tests"
+          command: py.test --verbose --capture=no counterpartylib/test/unit_test.py
+
+      - run:
+          name: "Run tests: utxolocks tests"
+          command: py.test --verbose --capture=no counterpartylib/test/utxolocks_test.py
+      
+      - run:
+          name: "Run tests: bytespersigop tests"
+          command: py.test --verbose --capture=no counterpartylib/test/bytespersigop_test.py
+
+      - run:
+          name: "Run tests: parse block tests"
+          command: py.test --verbose --capture=no counterpartylib/test/parse_block_test.py
+
+      - run:
+          name: "Run tests: integration tests"
+          command: py.test --verbose --capture=no --skiptestbook=all counterpartylib/test/integration_test.py
+
+      - run:
+          name: "Run tests: reparse tests"
+          command: py.test --verbose --capture=no --skiptestbook=mainnet -k test_book /test/reparse_test.py
+
+      - run:
+          name: "Run tests: database version tests"
+          command: py.test --verbose --capture=no counterpartylib/test/database_version_test.py
+
+workflows:
+  build-and-test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+
