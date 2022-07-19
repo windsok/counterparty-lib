@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/project
+          at: ~/
       
       - run:
           name: "Run tests"
