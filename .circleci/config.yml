@@ -65,7 +65,7 @@ jobs:
           name: "Run testnet reparse test"
           command: |
             mkdir test-results
-            py.test --junitxml=test-results/junit.xml --verbose --capture=no --skiptestbook=mainnet -k test_book counterpartylib/test/reparse_test.py"
+            py.test --junitxml=test-results/junit.xml --verbose --capture=no --skiptestbook=mainnet -k test_book counterpartylib/test/reparse_test.py
       
       - store_test_results:
           path: test-results
@@ -89,7 +89,7 @@ jobs:
           name: "Run testnet reparse test"
           command: |
             mkdir test-results
-            py.test --junitxml=test-results/junit.xml --verbose --capture=no --skiptestbook=testnet -k test_book counterpartylib/test/reparse_test.py"
+            py.test --junitxml=test-results/junit.xml --verbose --capture=no --skiptestbook=testnet -k test_book counterpartylib/test/reparse_test.py
       
       - store_test_results:
           path: test-results
