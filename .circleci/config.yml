@@ -23,13 +23,8 @@ jobs:
           name: Run apsw setup and install
           command: python setup.py install_apsw
 
-      - save_cache:
-          key: python-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}--{{ checksum "setup.py" }}
-          paths: 
-            - ~/.local
-
       - persist_to_workspace:
-          root: ~/project
+          root: ~/
           paths:
             - .      
 
@@ -41,12 +36,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/project
-
-      - restore_cache:
-          name: Restore Python Cache
-          keys:
-            - python-cache-{{ .Branch }}-{{ checksum "requirements.txt" }}--{{ checksum "setup.py" }}
+          at: ~/
       
       - run:
           name: "Run tests: config context"
