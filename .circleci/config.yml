@@ -38,7 +38,10 @@ jobs:
       
       - run:
           name: "Run tests"
-          command: "cd counterpartylib; py.test --verbose --skiptestbook=all --cov-config=../.coveragerc --cov-report=term-missing --cov=./"
+          command: "cd counterpartylib; mkdir test-results; py.test --junitxml=test-results/junit.xml --verbose --skiptestbook=all --cov-config=../.coveragerc --cov-report=term-missing --cov=./"
+
+      - store_test_results:
+          path: test-results
 
 workflows:
   build-and-test:
